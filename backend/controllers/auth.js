@@ -26,14 +26,14 @@ exports.signup = (req, res) => {
             }
             
             //for testing purposes only... user that is created
-            res.json({
-                user: success
-            })
+            // res.json({
+            //     user: success
+            // })
 
             //for later
-            // res.json({
-            //     message: 'Signup success! Please signin.'
-            // })
+            res.json({
+                message: 'Signup success! Please signin.'
+            })
         })
     })
 };
