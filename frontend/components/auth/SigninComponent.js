@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import React from 'react';
 import {useState} from 'react';
-import {signin} from '../../actions/auth';
+import {signin, authenticate} from '../../actions/auth';
 
 
 const SigninComponent = () =>{
@@ -36,8 +36,12 @@ const SigninComponent = () =>{
                 // save user token to cookie
                 // save user info to localstorage
                 // authenticate user
-                //redirect based on role
-                Router.push(`/`)
+                authenticate(data, () => {
+                    //redirect based on role
+                    Router.push(`/`)
+                })
+
+                
 
             }
         })
