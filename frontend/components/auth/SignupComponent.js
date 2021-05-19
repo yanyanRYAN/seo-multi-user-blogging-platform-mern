@@ -1,6 +1,7 @@
-import React from 'react';
+import  Router  from 'next/router';
+import React, { useEffect } from 'react';
 import {useState} from 'react';
-import {signup} from '../../actions/auth';
+import {isAuth, signup} from '../../actions/auth';
 
 
 const SignupComponent = () =>{
@@ -14,6 +15,13 @@ const SignupComponent = () =>{
         message: '',
         showForm: true
     }) //properties under password will be used later...
+
+    useEffect(() => {
+        // check if user is already authenticated, if they are automatic redirect.
+        if(isAuth()){
+            Router.replace('/');
+        }
+    })
 
     const {name, email, password, error, loading, message, showForm} = values; //destructure
 
