@@ -36,6 +36,21 @@ export const signin = (user) => { //pretty much the same
     .catch(err => console.log(err))
 }
 
+export const signout = (next) => {
+    removeCookie('token');
+    removeLocalStorage('user')
+    next();
+
+    return fetch(`${API}/signout`, {
+        method: 'GET'
+    })
+    .then(response => {
+        console.log('signout success')
+    })
+    .catch(err => console.log(err));
+}
+
+
 // set cookie
 export const setCookie = (key, value) => {
     //first check to see if we are in client or server side
@@ -59,9 +74,9 @@ export const removeCookie = (key) => {
 
 export const getCookie = (key) => {
     if(process.browser) {
-        cookie.get(key, {
+       return cookie.get(key, {
             expires: 1
-        });
+        }); //was not getting cookie forgot to add return
     }
 }
 
@@ -94,7 +109,7 @@ export const authenticate = (data, next) => { //takes in data, next is a callbac
 
 export const isAuth = () => {
     if(process.browser) {
-        //check if we have the cookie or else we might not have genuine/authenticated user
+        //check if we have the cookie or else we might not have genuine/authenticated user  //later ->> we can also use this for conditional rendering
         const cookieChecked = getCookie('token'); //if we can get this then we have a user
         if(cookieChecked) {
             if(localStorage.getItem('user')) {

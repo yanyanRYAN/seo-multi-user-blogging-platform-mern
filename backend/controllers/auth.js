@@ -30,7 +30,7 @@ exports.signup = (req, res) => {
             //     user: success
             // })
 
-            //for later
+            //for later- this is what should return on successful signin
             res.json({
                 message: 'Signup success! Please signin.'
             })
