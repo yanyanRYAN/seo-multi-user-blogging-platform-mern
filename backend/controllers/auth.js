@@ -88,4 +88,46 @@ exports.signout = (req, res) => {
 exports.requireSignin = expressJwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
+    userProperty: "user"
 });
+
+
+exports.authMiddleware = (req, res, next) => {
+    const authUserId = req.user._id
+    //find user in db
+    User.findById({_id: authUserId}).exec((err, user) => {
+        if(err || !user) {
+            return res.status(400).json({
+                error: 'User not found'
+            })
+        }
+        // careful this will make whole 
+        // user available including hashed password
+        // will need another middleware to hide the password
+        req.profile = user 
+        next()
+    })
+}
+
+exports.adminMiddleware = (req, res, next) => {
+    const adminUserId = req.user._id
+    //find user in db
+    User.findById({_id: adminUserId}).exec((err, user) => {
+        if(err || !user) {
+            return res.status(400).json({
+                error: 'User not found.'
+            })
+        }
+        //check the role of the user to make sure they are admin
+        if(user.role !== 1) { //the role of 1 means they are admin
+            return res.status(400).json({
+                error: 'Admin resource. Access Denied.'
+            })
+        }
+        // careful this will make whole 
+        // user available including hashed password
+        // will need another middleware to hide the password
+        req.profile = user
+        next()
+    })
+}
