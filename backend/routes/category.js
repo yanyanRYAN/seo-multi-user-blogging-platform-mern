@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { create  } = require('../controllers/category');
+const { create, list, read, remove  } = require('../controllers/category');
 
 // validators
 const {runValidation} = require('../validators'); //since it is named index.js you just need the dir
@@ -10,6 +10,10 @@ const { requireSignin, adminMiddleware } = require('../controllers/auth');
 
 router.post('/category', categoryCreateValidator, runValidation, requireSignin, adminMiddleware, create)
 //only admin should be able to create new category
+
+router.get('/categories', list)
+router.get('/category/:slug', read) // getting single category using request.params
+router.delete('/category/:slug', requireSignin, adminMiddleware, remove) //delete category...admin only
 
 //router.get('/profile', requireSignin, adminMiddleware, read);
 //test
