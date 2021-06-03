@@ -9,11 +9,11 @@ const {createTagValidator} = require('../validators/tag');
 const { requireSignin, adminMiddleware} = require('../controllers/auth');
 
 router.post('/tag', createTagValidator, runValidation, requireSignin, adminMiddleware, create );
-//only admin should be able to create new category
+//only admin should be able to create new tag
 
 router.get('/tags', list)
-router.get('/tags/:slug', read)
-router.delete('/tags/:slug', requireSignin, adminMiddleware, remove) //delete category
+router.get('/tag/:slug', read)
+router.delete('/tag/:slug', requireSignin, adminMiddleware, remove) //delete tag
 
 
 module.exports = router; //exports

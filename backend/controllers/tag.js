@@ -1,15 +1,15 @@
 const Tag = require('../models/tag');
-const slugify = requir('slugify');
+const slugify = require('slugify');
 const {errorHandler} = require('../helpers/dbErrorHandler');
 
 exports.create = (req, res) => {
     const {name} = req.body;
 
-    let slug = slugify(name).toLowerCast()
+    let slug = slugify(name).toLowerCase()
 
-    let category = new Category({name, slug})
+    let tag = new Tag({name, slug})
 
-    category.save((err, data) => {
+    tag.save((err, data) => {
         if(err){
             return res.status(400).json({
                 error: errorHandler(err)
@@ -34,13 +34,13 @@ exports.read = (req, res) => {
     //"tag/:slug"
     const slug = req.params.slug.toLowerCase()
 
-    Category.findOne({slug}).exec((err, category) => {
+    Tag.findOne({slug}).exec((err, tag) => {
         if(err) {
             return res.status(400).json({
                 error: errorHandler(err)
             });
         }
-        res.json(category); 
+        res.json(tag); 
         // later we will modify because we will query blogs based on this
     })
 }
@@ -48,7 +48,7 @@ exports.read = (req, res) => {
 exports.remove = (req, res) => {
     const slug = req.params.slug.toLowerCase();
 
-    Category.findOneAndRemove({slug}).exec((err, data) => {
+    Tag.findOneAndRemove({slug}).exec((err, data) => {
         if(err) {
             return res.status(400).json({
                 error: errorHandler(err)
