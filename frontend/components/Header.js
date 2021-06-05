@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NProgress from 'nprogress';
 import { APP_NAME } from '../config';
 import Link from 'next/link';
 import { signout, isAuth } from '../actions/auth'
@@ -17,6 +18,12 @@ import {
   NavbarText
 } from 'reactstrap';
 import Router from 'next/router';
+
+//NProgress bar loading animations
+Router.onRouteChangeStart = url => NProgress.start();
+Router.onRouteChangeComplete = url => NProgress.done();
+Router.onRouteChangeError = url => NProgress.done();
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
