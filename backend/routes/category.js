@@ -8,7 +8,7 @@ const {runValidation} = require('../validators'); //since it is named index.js y
 const {categoryCreateValidator } = require('../validators/category');
 const { requireSignin, adminMiddleware } = require('../controllers/auth');
 
-router.post('/category', categoryCreateValidator, runValidation, requireSignin, adminMiddleware, create)
+router.post('/category', requireSignin, adminMiddleware, categoryCreateValidator, runValidation,  create)
 //only admin should be able to create new category
 
 router.get('/categories', list)

@@ -88,9 +88,9 @@ exports.signout = (req, res) => {
 exports.requireSignin = expressJwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
-    userProperty: "user"
+    
 });
-
+//userProperty: "user"
 
 exports.authMiddleware = (req, res, next) => {
     const authUserId = req.user._id
