@@ -108,7 +108,7 @@ const Category = () => {
         }
     }
 
-    const mouseMoveHanlder = e => {
+    const mouseMoveHandler = e => {
         setValues({...values, error: false, success: false, removed: ''})
     }
 
@@ -133,7 +133,7 @@ const Category = () => {
         {showError()}
         {showRemoved()}
         
-        <div onMouseMove={mouseMoveHanlder}>
+        <div onMouseMove={mouseMoveHandler}>
         {newCategoryForm()}
         {showCategories()}
         </div>
