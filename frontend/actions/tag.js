@@ -4,29 +4,35 @@ import fetch from 'isomorphic-fetch';
 //bring in API from our config
 import {API} from '../config';
 
-//refer to backend/routes/category.js
-export const create = (category, token) => {
-    // console.log(`token ${token}`)
-    // console.log(category)
-    return fetch(`${API}/category`, {
+export const create = (tag, token) => {
+    return fetch(`${API}/tag`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             Authorization: `bearer ${token}`
         },
-        body: JSON.stringify(category)
+        body: JSON.stringify(tag)
     })
     .then(response => {
         return response.json()
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
 }
 
-export const getCategories = () => {
-    return fetch(`${API}/categories`, {
+export const getTags = () => {
+    return fetch(`${API}/tags`, {
         method: 'GET',
-        
+
+    }).then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
+export const singleTag = (slug) => {
+    return fetch(`${API}/tag/${slug}`, {
+        method: 'GET'
     })
     .then(response => {
         return response.json()
@@ -34,20 +40,8 @@ export const getCategories = () => {
     .catch(err => console.log(err))
 }
 
-export const singleCategory = (slug) => { 
-    return fetch(`${API}/category/${slug}`, {
-        method: 'GET',
-    })
-    .then(response => {
-        return response.json()
-    })
-    .catch(err => console.log(err))
-}
-
-export const removeCategory = (slug, token) => {
-    //console.log(`token ${token}`)
-    //console.log(slug)
-    return fetch(`${API}/category/${slug}`, {
+export const removeTag = (slug, token) => {
+    return fetch(`${API}/tag/${slug}`, {
         method: 'DELETE',
         headers: {
             Accept: 'application/json',

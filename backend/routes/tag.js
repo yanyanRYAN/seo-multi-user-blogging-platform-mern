@@ -8,7 +8,7 @@ const {runValidation} = require('../validators');
 const {createTagValidator} = require('../validators/tag');
 const { requireSignin, adminMiddleware} = require('../controllers/auth');
 
-router.post('/tag', createTagValidator, runValidation, requireSignin, adminMiddleware, create );
+router.post('/tag', requireSignin, adminMiddleware, createTagValidator, runValidation, create );
 //only admin should be able to create new tag
 
 router.get('/tags', list)

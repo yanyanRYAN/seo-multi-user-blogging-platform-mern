@@ -4,6 +4,7 @@ const {errorHandler} = require('../helpers/dbErrorHandler');
 
 exports.create = (req, res) => {
     const {name} = req.body;
+    
 
     let slug = slugify(name).toLowerCase()
 

@@ -36,7 +36,7 @@ const Category = () => {
 
     const showCategories = () => {
         return categories.map((category, index) => {
-            console.table(category);
+            //console.table(category);
             return <button onDoubleClick={() => deleteConfirm(category.slug)} 
             title="Double click to delete" key={index} 
             className="btn btn-outline-primary mr-1 ml-1 mt-3">{category.name}</button>
@@ -117,7 +117,7 @@ const Category = () => {
         return (
             <form onSubmit={clickSubmit}>
                 <div className="form-group">
-                    <label className="text-muted">Name</label>
+                    <label className="text-muted">Category</label>
                     <input type="text" className="form-control" onChange={handleChange} value={name} required />
                 </div>
                 <div>
