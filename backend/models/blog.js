@@ -10,10 +10,10 @@ const blogSchema = new mongoose.Schema({
         trim: true,
         min: 3,
         max: 160,
-        index: true,
         required: true
     },
     slug: {
+        //will be querying blogs using slug
         type: String,
         unique: true,
         index: true,
@@ -26,10 +26,9 @@ const blogSchema = new mongoose.Schema({
         min: 200,
         max: 2000000,
     },
-    excerp: {
+    excerpt: {
         // blog snippets - grab first 100 or so chars from blog body
         type: String,
-        required: true,
         max: 1000,
     },
     mtitle: {
