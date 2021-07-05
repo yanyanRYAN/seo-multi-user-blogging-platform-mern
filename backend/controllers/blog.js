@@ -33,7 +33,7 @@ exports.create = (req, res) => {
             })
         }
 
-        if (!body || body.length < 50) {
+        if (!body || body.length < 100) {
             return res.status(400).json({
                 error: 'Content is too short'
             })
@@ -69,7 +69,7 @@ exports.create = (req, res) => {
 
         //handle files
         if (files.photo) {
-            if (files.photo.size > 10000000) { //1MB
+            if (files.photo.size > 40000000) { //4MB was originally 1MB
                 return res.status(400).json({
                     error: 'Image should be less than 1MB in size'
                 });
