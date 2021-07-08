@@ -8,13 +8,13 @@ const { stripHtml } = require('string-strip-html') //Allow us to strip out html,
 const _ = require('lodash')// lib to update blog
 const { errorHandler } = require('../helpers/dbErrorHandler'); //send any error from mongoose to our client
 const fs = require('fs') // gives access to the file system
-const {smartTrim} =  require('../helpers/blog');
+const { smartTrim } = require('../helpers/blog');
 
 exports.create = (req, res) => {
 
     //handle form data
     let form = new formidable.IncomingForm()
-    console.log(form)
+    //console.log(form)
     form.keepExtensions = true // keeping original extensions .jpg, .gif, etc
     //parse data -- takes in request and callback that expects err, fields, or files
     form.parse(req, (err, fields, files) => {
@@ -100,6 +100,8 @@ exports.create = (req, res) => {
                             })
                         } else {
                             //finally return the blog with the categories and tags
+                            // console.log("Form before result")
+                            // console.log(form)
                             res.json(result)
                         }
                     })
@@ -111,3 +113,210 @@ exports.create = (req, res) => {
 
 };
 
+//list, listAllBlogsCategoriesTags, read, remove, update
+
+exports.list = (req, res) => {
+    //want to find blogs and send associated categories, tags, user with their fields
+    Blog.find({})
+        .populate('categories', '_id name slug') //('what you want', 'fields') fields have no comma separation
+        .populate('tags', '_id name slug')
+        .populate('postedBy', '_id name username')
+        .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')//selecting what to return. we dont want photos right now, too slow
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: errorHandler(err)
+                })
+            }
+            res.json(data)
+        })
+}
+
+exports.listAllBlogsCategoriesTags = (req, res) => {
+    //basically same as list but will also return Categories and Tags
+
+    //set limit for how many is returned for each request
+    //comes from front end. ex: user wants  10, 15 blogs for pagenation
+    // default is 10 blogs
+    let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
+    let blogs;
+    let categories;
+    let tags;
+
+    Blog.find({})
+        .populate('categories', '_id name slug') //('what you want', 'fields') fields have no comma separation
+        .populate('tags', '_id name slug')
+        .populate('postedBy', '_id name username profile')
+        .sort({ createdAt: -1 }) //returns the latest first
+        .skip(skip)
+        .limit(limit)
+        .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: errorHandler(err)
+                })
+            }
+            blogs = data // blogs
+            // get all categories
+            Category.find({}).exec((err, c) => {
+                if (err) {
+                    return res.json({
+                        error: errorHandler(err)
+                    })
+                }
+                categories = c //categories
+            })
+            //get all tags
+            Tag.find({}).exec((err, t) => {
+                if (err) {
+                    return res.json({
+                        error: errorHandler(err)
+                    })
+                }
+                tags = t
+
+                //return all blogs categories tags
+                // size how many blogs will be sent to front end
+                res.json({ blogs, categories, tags, size: blogs.length })
+            })
+        })
+
+}
+
+exports.read = (req, res) => {
+    //get slug
+    const slug = req.params.slug.toLowerCase() //make sure its lowercase
+
+    Blog.findOne({ slug })
+        //.select('-photo')
+        .populate('categories', '_id name slug') //('what you want', 'fields') fields have no comma separation
+        .populate('tags', '_id name slug')
+        .populate('postedBy', '_id name username')
+        .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: errorHandler(err)
+                })
+            }
+            res.json(data);
+        })
+}
+
+exports.remove = (req, res) => {
+    //get slug
+    const slug = req.params.slug.toLowerCase() //make sure its lowercase
+
+    Blog.findOneAndRemove({ slug }).exec((err, data) => {
+        if (err) {
+            return res.json({
+                error: errorHandler(err)
+            })
+        }
+        res.json({
+            message: 'Blog deleted successfully'
+        })
+    })
+}
+
+exports.update = (req, res) => {
+    //similar to blog create
+
+    //get slug
+    const slug = req.params.slug.toLowerCase() //make sure its lowercase
+
+    Blog.findOne({ slug }).exec((err, oldBlog) => { //consider the data an old blog since we will update it
+        if (err) {
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        }
+
+        //handle form data
+        let form = new formidable.IncomingForm();
+        //console.log(form)
+        form.keepExtensions = true // keeping original extensions .jpg, .gif, etc
+
+        //parse data -- takes in request and callback that expects err, fields, or files
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Image could not upload'
+                })
+            }
+
+
+            // even if the user updates the title, the slug shouldn't change
+
+            let slugBeforeMerge = oldBlog.slug
+            oldBlog = _.merge(oldBlog, fields) //merge oldblog with new fields
+            oldBlog.slug = slugBeforeMerge
+
+
+            const {body, desc, categories, tags} = fields
+
+
+            
+            if (body) {
+                oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...') //if body has changed we update the excerpt
+                oldBlog.desc = stripHtml(body.substring(0,160))
+            }
+
+            if (categories) {
+                //if categories are added it will create an array
+                oldBlog.categories = categories.split(',')
+            }
+
+            if (tags) {
+                oldBlog.tags = tags.split(',');
+            }
+
+
+
+            //handle files
+            if (files.photo) {
+                if (files.photo.size > 40000000) { //4MB was originally 1MB
+                    return res.status(400).json({
+                        error: 'Image should be less than 1MB in size'
+                    });
+                }
+                oldBlog.photo.data = fs.readFileSync(files.photo.path)
+                oldBlog.photo.contentType = files.photo.type
+            }
+
+            oldBlog.save((err, result) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                // result.photo = undefined //we can send result without photo
+                res.json(result); //updated blog
+                
+
+            })
+
+        })
+    })
+
+}
+
+
+exports.photo = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+    .select('photo')
+    .exec((err, blog) => {
+        if(err || !blog) {
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        }
+        //console.log(`Content-Type: ${blog.photo.contentType}`);
+        res.set('Content-Type', blog.photo.contentType)
+        return res.send(blog.photo.data);
+    })
+}
