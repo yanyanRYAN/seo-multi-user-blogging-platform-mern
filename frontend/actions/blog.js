@@ -22,3 +22,19 @@ export const createBlog = (blog, token) => {
     })
     .catch(err => console.log(err))
 }
+
+export const listBlogsWithCategoriesAndTags = () => {
+    //takes in blog and token of admin
+
+    return fetch(`${API}/blogs-categories-tags`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+        },
+        
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
