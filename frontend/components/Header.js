@@ -48,6 +48,14 @@ const Header = () => {
             }
 
             {
+              (isAuth() && isAuth().role == 1) ? <React.Fragment><NavItem>
+                  <Link href="/admin"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
+                </NavItem></React.Fragment> : (isAuth() && isAuth().role == 0) ? <React.Fragment><NavItem>
+                  <Link href="/user"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
+                </NavItem></React.Fragment> : null
+            }
+
+            {
               !isAuth() && <React.Fragment>
                 <NavItem>
                   <Link href="/signin"><NavLink style={{ cursor: 'pointer' }}>Signin</NavLink></Link>
@@ -63,13 +71,7 @@ const Header = () => {
             {isAuth() && (<NavItem>
               <NavLink style={{ cursor: 'pointer' }} onClick={() => signout(() => Router.replace('/signin'))}>Signout</NavLink>
             </NavItem>)}
-            {
-              (isAuth() && isAuth().role == 1) ? <React.Fragment><NavItem>
-                  <Link href="/admin"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
-                </NavItem></React.Fragment> : (isAuth() && isAuth().role == 0) ? <React.Fragment><NavItem>
-                  <Link href="/user"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
-                </NavItem></React.Fragment> : null
-            }
+            
           </Nav>
 
         </Collapse>

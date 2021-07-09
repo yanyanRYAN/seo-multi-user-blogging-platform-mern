@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
         data: String,
         default: ''
     }
-}, {timestamp: true})
+}, {timestamps: true})
 
 //virtual fields
 // want to get password from the user, but we want to save the HASHED password

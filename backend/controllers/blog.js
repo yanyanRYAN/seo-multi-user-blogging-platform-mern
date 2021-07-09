@@ -168,8 +168,7 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
                     })
                 }
                 categories = c //categories
-            })
-            //get all tags
+                //get all tags
             Tag.find({}).exec((err, t) => {
                 if (err) {
                     return res.json({
@@ -182,6 +181,8 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
                 // size how many blogs will be sent to front end
                 res.json({ blogs, categories, tags, size: blogs.length })
             })
+            })
+            
         })
 
 }

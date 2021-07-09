@@ -51,7 +51,7 @@ const blogSchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'User'
     }
-}, {timestamp: true})
+}, {timestamps: true})
 
 
 

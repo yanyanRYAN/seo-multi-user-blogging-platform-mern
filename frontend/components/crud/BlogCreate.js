@@ -93,7 +93,7 @@ const CreateBlog = ({ router }) => {
                 setBody('')// clear out the body state and localstorage
                 setCategories([])
                 setTags([]);
-                Router.push('/admin/crud/blog')
+                Router.push('/blogs')
             }
         })
     }
