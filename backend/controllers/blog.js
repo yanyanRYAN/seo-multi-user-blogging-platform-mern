@@ -51,10 +51,14 @@ exports.create = (req, res) => {
             })
         }
 
+        //for excerpt
+        let cleanText = body.replace(/<\/?[^>]+(>|$)/g, "");
+        //console.log("CleanText", cleanText);
+
         let blog = new Blog()
         blog.title = title
         blog.body = body
-        blog.excerpt = smartTrim(body, 320, ' ', ' ...');
+        blog.excerpt = smartTrim(cleanText, 320, ' ', ' ...');
         blog.slug = slugify(title).toLowerCase()
         blog.mtitle = `${title} | ${process.env.APP_NAME}`
         blog.mdesc = stripHtml(body.substring(0, 160)).result // .result - refer to striphtml docs
@@ -169,20 +173,20 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
                 }
                 categories = c //categories
                 //get all tags
-            Tag.find({}).exec((err, t) => {
-                if (err) {
-                    return res.json({
-                        error: errorHandler(err)
-                    })
-                }
-                tags = t
+                Tag.find({}).exec((err, t) => {
+                    if (err) {
+                        return res.json({
+                            error: errorHandler(err)
+                        })
+                    }
+                    tags = t
 
-                //return all blogs categories tags
-                // size how many blogs will be sent to front end
-                res.json({ blogs, categories, tags, size: blogs.length })
+                    //return all blogs categories tags
+                    // size how many blogs will be sent to front end
+                    res.json({ blogs, categories, tags, size: blogs.length })
+                })
             })
-            })
-            
+
         })
 
 }
@@ -196,7 +200,7 @@ exports.read = (req, res) => {
         .populate('categories', '_id name slug') //('what you want', 'fields') fields have no comma separation
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username')
-        .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+        .select('_id title body slug mtitle mdesc categories excerpt tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -257,13 +261,13 @@ exports.update = (req, res) => {
             oldBlog.slug = slugBeforeMerge
 
 
-            const {body, desc, categories, tags} = fields
+            const { body, desc, categories, tags } = fields
 
 
-            
+
             if (body) {
                 oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...') //if body has changed we update the excerpt
-                oldBlog.desc = stripHtml(body.substring(0,160))
+                oldBlog.desc = stripHtml(body.substring(0, 160))
             }
 
             if (categories) {
@@ -296,7 +300,7 @@ exports.update = (req, res) => {
                 }
                 // result.photo = undefined //we can send result without photo
                 res.json(result); //updated blog
-                
+
 
             })
 
@@ -308,16 +312,41 @@ exports.update = (req, res) => {
 
 exports.photo = (req, res) => {
     const slug = req.params.slug.toLowerCase();
-    Blog.findOne({slug})
-    .select('photo')
-    .exec((err, blog) => {
-        if(err || !blog) {
+    Blog.findOne({ slug })
+        .select('photo')
+        .exec((err, blog) => {
+            if (err || !blog) {
+                return res.status(400).json({
+                    error: errorHandler(err)
+                })
+            }
+            //console.log(`Content-Type: ${blog.photo.contentType}`);
+            res.set('Content-Type', blog.photo.contentType)
+            return res.send(blog.photo.data);
+        })
+}
+
+exports.listRelated = (req, res) => {
+    //not req.limit we have to use req.body because it is a post
+    let limit = req.body.limit ? parseInt(req.body.limit ) : 3
+
+    //grab ids and categories from the blog in the req
+    //since we use post we will be able to grab the blog
+    const{_id, categories} = req.body.blog
+
+    Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
+    .limit(limit)
+    .populate('postedBy', '_id name profile')
+    .select('title slug excerpt postedBy createdAt updatedAt')
+    .exec((err, blogs) => {
+        if(err) {
             return res.status(400).json({
-                error: errorHandler(err)
-            })
+                error: 'Blogs not found'
+            });
+            
         }
-        //console.log(`Content-Type: ${blog.photo.contentType}`);
-        res.set('Content-Type', blog.photo.contentType)
-        return res.send(blog.photo.data);
+        res.json(blogs)
     })
+
+
 }
