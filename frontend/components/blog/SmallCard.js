@@ -29,7 +29,7 @@ const SmallCard = ({ blog }) => {
                             <h5 className="card-title">{blog.title}</h5>
                         </a>
                     </Link>
-                    <div className="">{blog.excerpt == undefined ? ' ' : renderHTML(blog.excerpt)}</div>
+                    <div className="card-text">{blog.excerpt == undefined ? ' ' : renderHTML(blog.excerpt)}</div>
                     </div>
                     <div class="card-footer text-muted">
                         Posted {moment(blog.updatedAt).fromNow()} by {' '}

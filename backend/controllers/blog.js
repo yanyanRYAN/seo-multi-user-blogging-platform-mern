@@ -125,6 +125,7 @@ exports.list = (req, res) => {
         .populate('categories', '_id name slug') //('what you want', 'fields') fields have no comma separation
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username')
+        .sort({ createdAt: -1 })
         .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')//selecting what to return. we dont want photos right now, too slow
         .exec((err, data) => {
             if (err) {
