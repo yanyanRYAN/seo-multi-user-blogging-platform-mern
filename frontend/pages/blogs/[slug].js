@@ -139,8 +139,9 @@ SingleBlog.getInitialProps = ({ query }) => {
         if (data.error) {
             console.log(data.error)
         } else {
-            console.log(data)
-            console.log(query)
+            // console.log("GET INITIAL PROPS SINGLEBLOG")
+            // console.log(data)
+            // console.log(query)
             return { blog: data, query }
         }
     })

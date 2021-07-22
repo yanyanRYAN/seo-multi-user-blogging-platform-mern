@@ -73,7 +73,7 @@ const CreateBlog = ({ router }) => {
     }
 
     useEffect(() => {
-        setValues({...values, formData: new FormData() }) //when component mounts we have FormData ready to use
+        setValues({ ...values, formData: new FormData() }) //when component mounts we have FormData ready to use
         initCategories()
         initTags()
     }, [router]) // [router] instance comes from withRouter
@@ -119,7 +119,7 @@ const CreateBlog = ({ router }) => {
     }
 
     const handleBody = (e) => {
-        //console.log(e);
+        console.log(e);
         setBody(e)//push entire event to body
         formData.set('body', e) //to be sent back to backend
         if (typeof window !== 'undefined') {
@@ -128,7 +128,7 @@ const CreateBlog = ({ router }) => {
 
     }
 
-    const handleCatToggle = c => () => {
+    const handleCatToggle = (c) => {
         //cant pass params to a function outside a function ex: onChange
         // so we nest an anonymous function
         setValues({ ...values, error: '' })
@@ -149,7 +149,7 @@ const CreateBlog = ({ router }) => {
 
     }
 
-    const handleTagToggle = t => () => {
+    const handleTagToggle = (t) => {
         //cant pass params to a function outside a function ex: onChange
         // so we nest an anonymous function
         setValues({ ...values, error: '' })
@@ -177,7 +177,7 @@ const CreateBlog = ({ router }) => {
             //logical predicates -- if categories exists then we will map
             categories && categories.map((c, i) => (
                 <li key={i} className="list-unstyled">
-                    <input onChange={handleCatToggle(c._id)} type="checkbox" className="mr-2" />
+                    <input onChange={() => handleCatToggle(c._id)} type="checkbox" className="mr-2" />
                     <label className="form-check-label">{c.name}</label>
                 </li>
 
@@ -190,7 +190,7 @@ const CreateBlog = ({ router }) => {
             //logical predicates -- if categories exists then we will map
             tags && tags.map((t, i) => (
                 <li key={i} className="list-unstyled">
-                    <input onChange={handleTagToggle(t._id)} type="checkbox" className="mr-2" />
+                    <input onChange={() => handleTagToggle(t._id)} type="checkbox" className="mr-2" />
                     <label className="form-check-label">{t.name}</label>
                 </li>
 

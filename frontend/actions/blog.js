@@ -71,8 +71,6 @@ export const singleBlog = slug => {
 
 export const listRelated = (blog) => {
     
-    
-
     return fetch(`${API}/blogs/related`, {
         method: 'POST',
         headers: {
