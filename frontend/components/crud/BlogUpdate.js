@@ -26,11 +26,12 @@ const BlogUpdate = ({ router }) => {
         formData: '',
         title: '',
         body: '',
+        photo: ''
     });
 
     //const form = new FormData();
 
-    const { error, success, formData, title } = values;
+    const { error, success, formData, title, photo } = values;
 
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
@@ -38,17 +39,18 @@ const BlogUpdate = ({ router }) => {
     const [checkedCat, setCheckedCat] = useState([]); //categories
     const [checkedTag, setCheckedTag] = useState([]); //tags
 
+    //const [photo, setPhoto] = useState('')
+
     const token = getCookie('token');
 
     //get blog
     const [blog, setBlog] = useState({});
 
     useEffect(() => {
-        let form = new FormData();
         initBlog();
         initCategories();
         initTags();
-        setValues({ ...values, formData: form});
+        setValues({ ...values, formData: new FormData()});
     }, [router]);
 
     const initBlog = () => {
@@ -122,7 +124,7 @@ const BlogUpdate = ({ router }) => {
         console.log('Checked Categories')
         console.log(all)
         setCheckedCat(all);
-        formData.append('categories', all);
+        //formData.append('categories', all);
 
     };
 
@@ -143,7 +145,7 @@ const BlogUpdate = ({ router }) => {
         console.log('Checked Tags');
         console.log(all);
         setCheckedTag(all);
-        formData.append('tags', all);
+        //formData.append('tags', all);
 
     };
 
@@ -197,6 +199,7 @@ const BlogUpdate = ({ router }) => {
 
 
     const handleChange = (name) => (e) => {
+        //let formData = new FormData();
         // a function returning another function -- curried function
         //console.log(e.target.value);
         //dynamically handle change 
@@ -205,8 +208,15 @@ const BlogUpdate = ({ router }) => {
         //instantiate new form data with use effect when component loads
 
         // .set(name of whats passed in, data)
-        formData.append(name, value); //this is what will be sent into the backend
-
+        //formData.append(name, value); //this is what will be sent into the backend
+        console.log("handle Change", e.target.value)
+        if(name === 'photo') {
+            console.log("handle Change", e.target.files[0])
+        }
+        
+        // if(name === 'photo') {
+        //     setPhoto({...photo, [name]: value})
+        // }
 
         setValues({
             ...values,
@@ -216,19 +226,37 @@ const BlogUpdate = ({ router }) => {
         });
     };
 
+    const handlePhoto = e => {
+        // console.log(formData)
+        // console.log(e)
+        console.log("handle photo")
+        setPhoto(e.target.files[0])
+        console.log(e)
+        console.log(e.target.value)
+        console.log(e.target.files)
+        
+        //setPhoto( e.target.files)
+        //setValues({...values, photo: e.target.files[0]})
+        console.log("photo useState")
+        console.log(photo);
+    }
+
     const handleBody = e => {
         setBody(e);
 
-        formData.append('body', e);
+        //formData.append('body', e);
     };
 
     const editBlog = (e) => {
         e.preventDefault();
-
-        // let formData = new FormData();
-        // formData.append("title", values.title);
-        // formData.append("body", body);
-        // formData.append("photo",)
+        
+        let formData = new FormData();
+         
+         formData.append("title", values.title);
+         formData.append("body", body);
+         formData.append("photo", photo);
+         formData.append("categories", checkedCat)
+         formData.append("tags", checkedTag)
 
         //I ended up declaring new FormData in useEffect
 

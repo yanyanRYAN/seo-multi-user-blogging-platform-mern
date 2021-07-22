@@ -105,6 +105,8 @@ const CreateBlog = ({ router }) => {
         //if it is a photo it will grab target.files else will get target value
         const value = name === 'photo' ? e.target.files[0] : e.target.value
         //instantiate new form data with use effect when component loads
+        // console.log("handle Change", e.target.value)
+        // console.log("handle Change", e.target.files[0])
 
         // .set(name of whats passed in, data)
         formData.set(name, value) //this is what will be sent into the backend
@@ -116,6 +118,9 @@ const CreateBlog = ({ router }) => {
             formData, //since formData is the same name formData: formData
             error: ''
         })
+
+        console.table(values);
+        console.table(values.formData)
     }
 
     const handleBody = (e) => {
