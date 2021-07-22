@@ -17,6 +17,7 @@ import { QuillModules, QuillFormats } from '../../helpers/quill'
 
 import {DOMAIN, API} from '../../config';
 
+import FormData from 'form-data'
 const BlogUpdate = ({ router }) => {
     const [body, setBody] = useState('');
     const [values, setValues] = useState({
@@ -26,6 +27,8 @@ const BlogUpdate = ({ router }) => {
         title: '',
         body: '',
     });
+
+    //const form = new FormData();
 
     const { error, success, formData, title } = values;
 
@@ -41,10 +44,11 @@ const BlogUpdate = ({ router }) => {
     const [blog, setBlog] = useState({});
 
     useEffect(() => {
-        setValues({ ...values, formData: new FormData() });
+        let form = new FormData();
         initBlog();
         initCategories();
         initTags();
+        setValues({ ...values, formData: form});
     }, [router]);
 
     const initBlog = () => {
@@ -118,7 +122,7 @@ const BlogUpdate = ({ router }) => {
         console.log('Checked Categories')
         console.log(all)
         setCheckedCat(all);
-        formData.set('categories', all);
+        formData.append('categories', all);
 
     };
 
@@ -139,7 +143,7 @@ const BlogUpdate = ({ router }) => {
         console.log('Checked Tags');
         console.log(all);
         setCheckedTag(all);
-        formData.set('tags', all);
+        formData.append('tags', all);
 
     };
 
@@ -201,7 +205,7 @@ const BlogUpdate = ({ router }) => {
         //instantiate new form data with use effect when component loads
 
         // .set(name of whats passed in, data)
-        formData.set(name, value); //this is what will be sent into the backend
+        formData.append(name, value); //this is what will be sent into the backend
 
 
         setValues({
@@ -215,7 +219,7 @@ const BlogUpdate = ({ router }) => {
     const handleBody = e => {
         setBody(e);
 
-        formData.set('body', e);
+        formData.append('body', e);
     };
 
     const editBlog = (e) => {
