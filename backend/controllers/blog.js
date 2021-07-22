@@ -337,6 +337,7 @@ exports.listRelated = (req, res) => {
 
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
     .limit(limit)
+    .sort({ createdAt: -1 })
     .populate('postedBy', '_id name profile')
     .select('title slug excerpt postedBy createdAt updatedAt')
     .exec((err, blogs) => {

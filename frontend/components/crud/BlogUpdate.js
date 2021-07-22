@@ -15,6 +15,8 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import '../../node_modules/react-quill/dist/quill.snow.css'
 import { QuillModules, QuillFormats } from '../../helpers/quill'
 
+import {DOMAIN, API} from '../../config';
+
 const BlogUpdate = ({ router }) => {
     const [body, setBody] = useState('');
     const [values, setValues] = useState({
@@ -32,6 +34,8 @@ const BlogUpdate = ({ router }) => {
 
     const [checkedCat, setCheckedCat] = useState([]); //categories
     const [checkedTag, setCheckedTag] = useState([]); //tags
+
+    const token = getCookie('token');
 
     //get blog
     const [blog, setBlog] = useState({});
@@ -216,16 +220,50 @@ const BlogUpdate = ({ router }) => {
 
     const editBlog = (e) => {
         e.preventDefault();
-        let formData = new FormData();
-        formData.append("title", values.title);
-        formData.append("body", body);
 
+        // let formData = new FormData();
+        // formData.append("title", values.title);
+        // formData.append("body", body);
+        // formData.append("photo",)
 
+        //I ended up declaring new FormData in useEffect
 
         //
         console.log('update blog')
+        updateBlog(formData, token, router.query.slug).then(data => {
+            if(data.error) {
+                setValues({...values, error: data.error})
+            } else {
+                setValues({...values, title: '', success: `Blog "${data.title}" is successfully updated`})
+
+                //then redirect based on role
+                if(isAuth() && isAuth().role === 1){
+                    //Router.replace(`${DOMAIN}/admin/crud/${router.query.slug}`)
+                    Router.replace(`/admin/`)
+                } else if(isAuth() && isAuth().role === 0){
+                    //Router.replace(`${DOMAIN}/user/crud/${router.query.slug}`)
+                    Router.replace(`/user/`)
+                }
+            }
+        })
+
     };
 
+    const showError = () => {
+        return(
+            <div className="alert alert-danger" style={{display: error ? '' : 'none'}}>
+                {error}
+            </div>
+        )
+    }
+
+    const showSuccess = () => {
+        return(
+            <div className="alert alert-success" style={{display: success ? '' : 'none'}}>
+                {success}
+            </div>
+        )
+    }
 
     const updateBlogForm = () => {
         return (
@@ -257,20 +295,26 @@ const BlogUpdate = ({ router }) => {
             <div className="row">
                 <div className="col-md-8">
                     {updateBlogForm()}
+                    
                     <div className="pt-3">
-                        show success and error msg
-              
+                        {showSuccess()}
+                        {showError()}
                     </div>
 
-
+                    <div>
+                    <h5>Photo Preview:</h5>
+                    {body && ( <img src={`${API}/blog/photo/${router.query.slug}`} alt={title} style={{height: "auto" ,width: '100%'}} />)}
+                    </div>
+                   
                 </div>
 
                 <div className="col-md-4">
                     <div>
                         <div className="form-group pb-2">
                             <h5>Featured Image</h5>
+                            
                             <hr />
-                            <small className="text-muted">Max Size: 1MB</small>
+                            <p className="text-muted">Max Size: 1MB</p>
                             <label className="btn btn-outline-info">
                                 Upload featured image
                             <input onChange={handleChange('photo')} type="file" accept="image/*" hidden />
