@@ -8,9 +8,9 @@ const SmallCard = ({ blog }) => {
 
     //let cleanExcerpt = blog.excerpt.replace(/&nbsp;/g, " ");
     //console.log("clean Excerpt", cleanExcerpt)
-
+    //style={{height: '300px'}}
     return (
-        <div className="card h-100" style={{}}>
+        <div className="card " style={{}}>
 
             <div className="">
                 <Link href={`/blogs/${blog.slug}`}>
@@ -22,16 +22,18 @@ const SmallCard = ({ blog }) => {
                         />
                     </a>
                 </Link>
-                <div className="">
+                <div>
                     <div className="card-body ">
                     <Link href={`/blogs/${blog.slug}`}>
                         <a>
                             <h5 className="card-title">{blog.title}</h5>
                         </a>
                     </Link>
-                    <div className="card-text">{blog.excerpt == undefined ? ' ' : renderHTML(blog.excerpt)}</div>
+                    <div className="card-text " style={{height: '300px'}} >
+                        {blog.excerpt == undefined ? ' ' : renderHTML(blog.excerpt)}
                     </div>
-                    <div class="card-footer text-muted">
+                    </div>
+                    <div className="card-footer text-muted">
                         Posted {moment(blog.updatedAt).fromNow()} by {' '}
                         <Link href={`/`}>
                             <a className="float-right">{blog.postedBy.name}</a>

@@ -119,13 +119,14 @@ const SingleBlog = ({ blog, router, query }) => {
                         <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
                         <hr />
                         <div className="">
-                            <div className="card-deck">
+                            <div className="card-deck h-100">
                                 {showRelatedBlogs()}
                             </div>
                         </div>
                     </div>
-
+                    
                     <div className="container pb-5">
+                    <hr />
                         <p>show comments</p>
                     </div>
                 </article>
