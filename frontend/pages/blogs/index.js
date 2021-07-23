@@ -138,7 +138,7 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
                     </div>
                     <div className="container-fluid">
                         {showLoadedBlogs()}
-                        
+
                     </div>
                     <div className="text-center pt-5 pb-5">
                         {loadMoreButton()}
@@ -151,23 +151,46 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
 
 //getInitialProps is a nextJS lifecycle method that is 
 // not available in Components, ONLY pages
-Blogs.getInitialProps = () => {
-    //initial values for pagenation
-    let skip = 0; // setting this to higher than 1 will skip the latest blog on init
-    let limit = 5; // setting the limit for each load
+//use getServerSideProps instead since we are using later version of nextjs
+// Blogs.getInitialProps = () => {
+//     //initial values for pagenation
+//     let skip = 0; // setting this to higher than 1 will skip the latest blog on init
+//     let limit = 5; // setting the limit for each load
+
+//     return listBlogsWithCategoriesAndTags(skip, limit).then(data => {
+//         if (data.error) {
+//             console.log(data.error)
+//         } else {
+//             return {
+//                 blogs: data.blogs,
+//                 categories: data.categories,
+//                 tags: data.tags,
+//                 totalBlogs: data.size,
+//                 blogsLimit: limit,
+//                 blogSkip: skip
+//             };
+//         }
+//     })
+// }
+
+export const getServerSideProps = async () => {
+    let skip = 0;
+    let limit = 5;
 
     return listBlogsWithCategoriesAndTags(skip, limit).then(data => {
         if (data.error) {
             console.log(data.error)
         } else {
             return {
-                blogs: data.blogs,
-                categories: data.categories,
-                tags: data.tags,
-                totalBlogs: data.size,
-                blogsLimit: limit,
-                blogSkip: skip
-            };
+                props: {
+                    blogs: data.blogs,
+                    categories: data.categories,
+                    tags: data.tags,
+                    totalBlogs: data.size,
+                    blogsLimit: limit,
+                    blogSkip: skip
+                }
+            }
         }
     })
 }

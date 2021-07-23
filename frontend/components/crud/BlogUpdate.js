@@ -17,7 +17,7 @@ import { QuillModules, QuillFormats } from '../../helpers/quill'
 
 import {DOMAIN, API} from '../../config';
 
-import FormData from 'form-data'
+//import FormData from 'form-data'
 const BlogUpdate = ({ router }) => {
     const [body, setBody] = useState('');
     const [values, setValues] = useState({
@@ -50,7 +50,7 @@ const BlogUpdate = ({ router }) => {
         initBlog();
         initCategories();
         initTags();
-        setValues({ ...values, formData: new FormData()});
+        setValues({ ...values,});
     }, [router]);
 
     const initBlog = () => {
@@ -271,7 +271,13 @@ const BlogUpdate = ({ router }) => {
                 //then redirect based on role
                 if(isAuth() && isAuth().role === 1){
                     //Router.replace(`${DOMAIN}/admin/crud/${router.query.slug}`)
-                    Router.replace(`/admin/`)
+                    //Router.replace(`${DOMAIN}/blogs`)
+                    //Router.reload(`${DOMAIN}/blogs/`)
+                    //location.reload();
+                    //Router.replace(`${DOMAIN}/blogs/`).then(()=> Router.reload())
+                    //Router.replace(`${DOMAIN}/blogs/`);
+                    Router.replace(`/admin/`).then(()=> Router.reload())
+                    
                 } else if(isAuth() && isAuth().role === 0){
                     //Router.replace(`${DOMAIN}/user/crud/${router.query.slug}`)
                     Router.replace(`/user/`)

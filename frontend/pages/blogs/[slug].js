@@ -135,17 +135,32 @@ const SingleBlog = ({ blog, router, query }) => {
     </React.Fragment>
 }
 
-SingleBlog.getInitialProps = ({ query }) => {
-    return singleBlog(query.slug).then(data => {
-        if (data.error) {
+// SingleBlog.getInitialProps = ({ query }) => {
+//     return singleBlog(query.slug).then(data => {
+//         if (data.error) {
+//             console.log(data.error)
+//         } else {
+//             // console.log("GET INITIAL PROPS SINGLEBLOG")
+//             // console.log(data)
+//             // console.log(query)
+//             return { blog: data, query }
+//         }
+//     })
+// }
+// use getServerSideProps
+export const getServerSideProps = async({query}) => {
+    return singleBlog(query.slug)
+    .then((data) => {
+        if( data.error) {
             console.log(data.error)
         } else {
-            // console.log("GET INITIAL PROPS SINGLEBLOG")
-            // console.log(data)
-            // console.log(query)
-            return { blog: data, query }
+            return {
+                props: {blog: data, query}
+            }
         }
     })
 }
+
+
 
 export default withRouter(SingleBlog);

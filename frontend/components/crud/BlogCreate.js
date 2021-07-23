@@ -120,7 +120,7 @@ const CreateBlog = ({ router }) => {
         })
 
         console.table(values);
-        console.table(values.formData)
+        
     }
 
     const handleBody = (e) => {
