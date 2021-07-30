@@ -24,9 +24,12 @@ const AdminIndex = () => {
                                 </Link>
                                 </li>
                                 <li className="list-group-item">
-                                <Link href="/admin/crud/blog">
-                                    <a>Create Blog</a>
-                                </Link>
+                                    {
+                                        // since the css might not load sometimes for the text editor
+                                        // we use <a> to link to the page so it can reload the page
+                                    }
+                                    <a href="/admin/crud/blog">Create Blog</a>
+                                
                                 </li>
                                 <li className="list-group-item">
                                 <Link href="/admin/crud/blogs">

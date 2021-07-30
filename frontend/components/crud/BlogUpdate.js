@@ -39,7 +39,7 @@ const BlogUpdate = ({ router }) => {
     const [checkedCat, setCheckedCat] = useState([]); //categories
     const [checkedTag, setCheckedTag] = useState([]); //tags
 
-    //const [photo, setPhoto] = useState('')
+    const [hasPhoto, setHasPhoto] = useState(false);
 
     const token = getCookie('token');
 
@@ -212,6 +212,7 @@ const BlogUpdate = ({ router }) => {
         console.log("handle Change", e.target.value)
         if(name === 'photo') {
             console.log("handle Change", e.target.files[0])
+            setHasPhoto(true);
         }
         
         // if(name === 'photo') {
@@ -254,7 +255,10 @@ const BlogUpdate = ({ router }) => {
          
          formData.append("title", values.title);
          formData.append("body", body);
-         formData.append("photo", photo);
+         if(hasPhoto){
+            formData.append("photo", photo);//gotta fix this later
+            setHasPhoto(!hasPhoto);
+         }
          formData.append("categories", checkedCat)
          formData.append("tags", checkedTag)
 
