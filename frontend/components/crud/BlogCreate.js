@@ -17,7 +17,23 @@ import {QuillModules, QuillFormats} from '../../helpers/quill'
 
 const BlogCreate = ({ router }) => {
 
-    const [body, setBody] = useState('');
+    const blogFromLS = () => {
+        if (typeof window === 'undefined') {
+            return false
+        }
+
+        if (localStorage.getItem('blog')) {
+            /*
+                since we stored the blog item in localstorage as a Stringified JSON string
+                we want to parse it back into a javascript object
+            */
+            return JSON.parse(localStorage.getItem('blog'))
+        } else {
+            return false;
+        }
+    }
+
+    const [body, setBody] = useState(blogFromLS());
     const [values, setValues] = useState({
         error: '',
         success: '',
@@ -99,6 +115,9 @@ const BlogCreate = ({ router }) => {
         setBody(e);
 
         //formData.append('body', e);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('blog', JSON.stringify(e))
+        }
     };
 
     const publishBlog = (e) => {
