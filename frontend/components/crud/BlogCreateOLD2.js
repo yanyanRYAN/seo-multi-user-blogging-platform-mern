@@ -83,37 +83,37 @@ const CreateBlog = ({ router }) => {
         initTags()
     }, [router]) // [router] instance comes from withRouter
 
-    // const publishBlog = (e) => {
-    //     e.preventDefault()
-    //     //console.log('ready to publishBlog')
+    const publishBlog = (e) => {
+        e.preventDefault()
+        //console.log('ready to publishBlog')
         
-    //     let formData = new FormData();
+        let formData = new FormData();
 
-    //     formData.append("title", values.title);
-    //     formData.append("body", body);
-    //     if(hasPhoto){
-    //         formData.append("photo", photo);
-    //         setHasPhoto(!hasPhoto);
-    //     }
-    //     formData.append("categories", checkedCat);
-    //     formData.append("tags", checkedTag);
+        formData.append("title", values.title);
+        formData.append("body", body);
+        if(hasPhoto){
+            formData.append("photo", photo);
+            setHasPhoto(!hasPhoto);
+        }
+        formData.append("categories", checkedCat);
+        formData.append("tags", checkedTag);
 
 
-    //     createBlog(formData, token).then(data => {
-    //         // console.log('publish blog')
-    //         // console.table(data)
-    //         // console.log(data.error)
-    //         if (data.error) {
-    //             setValues({ ...values, error: data.error })
-    //         } else {
-    //             setValues({ ...values, title: '', error: '', success: `A new blog title "${data.title}" is created.` });
-    //             setBody('')// clear out the body state and localstorage
-    //             setCategories([])
-    //             setTags([]);
-    //             Router.push('/blogs')
-    //         }
-    //     })
-    // }
+        createBlog(formData, token).then(data => {
+            // console.log('publish blog')
+            // console.table(data)
+            // console.log(data.error)
+            if (data.error) {
+                setValues({ ...values, error: data.error })
+            } else {
+                setValues({ ...values, title: '', error: '', success: `A new blog title "${data.title}" is created.` });
+                setBody('')// clear out the body state and localstorage
+                setCategories([])
+                setTags([]);
+                Router.push('/blogs')
+            }
+        })
+    }
 
     const handleChange = (name) => (e) => {
         // a function returning another function -- curried function

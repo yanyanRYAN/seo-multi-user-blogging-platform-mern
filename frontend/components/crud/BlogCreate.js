@@ -16,24 +16,24 @@ import '../../node_modules/react-quill/dist/quill.snow.css'
 import {QuillModules, QuillFormats} from '../../helpers/quill'
 
 const BlogCreate = ({ router }) => {
+    // blogFromLS will cause issues on some computers 
+    // const blogFromLS = () => {
+    //     // if (typeof window === 'undefined') {
+    //     //     return false
+    //     // }
 
-    const blogFromLS = () => {
-        if (typeof window === 'undefined') {
-            return false
-        }
+    //     if (localStorage.getItem('blog')) {
+    //         /*
+    //             since we stored the blog item in localstorage as a Stringified JSON string
+    //             we want to parse it back into a javascript object
+    //         */
+    //         return JSON.parse(localStorage.getItem('blog'))
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
-        if (localStorage.getItem('blog')) {
-            /*
-                since we stored the blog item in localstorage as a Stringified JSON string
-                we want to parse it back into a javascript object
-            */
-            return JSON.parse(localStorage.getItem('blog'))
-        } else {
-            return false;
-        }
-    }
-
-    const [body, setBody] = useState(blogFromLS());
+    const [body, setBody] = useState();
     const [values, setValues] = useState({
         error: '',
         success: '',
@@ -115,9 +115,9 @@ const BlogCreate = ({ router }) => {
         setBody(e);
 
         //formData.append('body', e);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('blog', JSON.stringify(e))
-        }
+        // if (typeof window !== 'undefined') {
+        //     localStorage.setItem('blog', JSON.stringify(e))
+        // }
     };
 
     const publishBlog = (e) => {
@@ -176,7 +176,7 @@ const BlogCreate = ({ router }) => {
                         theme="snow"
                         modules={QuillModules}
                         formats={QuillFormats}
-                        value={body} placeholder="Write something amazing..."
+                        value={body || ''} placeholder="Write something amazing..."
                         onChange={handleBody} />
                 </div>
 
