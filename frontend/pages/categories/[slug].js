@@ -8,8 +8,7 @@ import { singleCategory } from '../../actions/category'
 import renderHTML from 'react-render-html'
 import moment from 'moment' //use for formatting the date
 import Card from '../../components/blog/Card'
-
-import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config'
+import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config' //for head
 
 //server side rendered
 const Category = ({category, blogs}) => {
@@ -27,8 +26,8 @@ const Category = ({category, blogs}) => {
                                         <Card key={index} blog={blog} />
                                         <hr />
                                     </div>
-                                    
                                 ))}
+                                {JSON.stringify(blogs)}
                             </div>
                         </header>
                     </div>

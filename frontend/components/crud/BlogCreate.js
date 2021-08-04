@@ -41,6 +41,8 @@ const CreateBlog = ({ router }) => {
         formData: '',
         title: '',
         hidePublishButton: false,
+        body: '',
+        photo: ''
     })
 
     const [categories, setCategories] = useState([]);
@@ -49,7 +51,9 @@ const CreateBlog = ({ router }) => {
     const [checkedCat, setCheckedCat] = useState([]) //categories
     const [checkedTag, setCheckedTag] = useState([]) //tags
 
-    const { error, sizeError, success, formData, title, hidePublishButton } = values;
+    const [hasPhoto, setHasPhoto] = useState(false);
+
+    const { error, sizeError, success, formData, title, hidePublishButton, photo } = values;
     const token = getCookie('token');
 
     const initCategories = () => {
@@ -73,7 +77,8 @@ const CreateBlog = ({ router }) => {
     }
 
     useEffect(() => {
-        setValues({...values, formData: new FormData() }) //when component mounts we have FormData ready to use
+        //setValues({...values, formData: new FormData() }) //when component mounts we have FormData ready to use
+        setValues({...values})
         initCategories()
         initTags()
     }, [router]) // [router] instance comes from withRouter
@@ -81,6 +86,18 @@ const CreateBlog = ({ router }) => {
     const publishBlog = (e) => {
         e.preventDefault()
         //console.log('ready to publishBlog')
+        
+        let formData = new FormData();
+
+        formData.append("title", values.title);
+        formData.append("body", body);
+        if(hasPhoto){
+            formData.append("photo", photo);
+            setHasPhoto(!hasPhoto);
+        }
+        formData.append("categories", checkedCat);
+        formData.append("tags", checkedTag);
+
 
         createBlog(formData, token).then(data => {
             // console.log('publish blog')
@@ -109,7 +126,12 @@ const CreateBlog = ({ router }) => {
         // console.log("handle Change", e.target.files[0])
 
         // .set(name of whats passed in, data)
-        formData.set(name, value) //this is what will be sent into the backend
+        //formData.set(name, value) //this is what will be sent into the backend
+
+        if(name === 'photo') {
+            console.log("handle Change", e.target.files[0])
+            setHasPhoto(true);
+        }
 
 
         setValues({
@@ -126,10 +148,10 @@ const CreateBlog = ({ router }) => {
     const handleBody = (e) => {
         //console.log(e);
         setBody(e)//push entire event to body
-        formData.set('body', e) //to be sent back to backend
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('blog', JSON.stringify(e))
-        }
+        // formData.set('body', e) //to be sent back to backend
+        // if (typeof window !== 'undefined') {
+        //     localStorage.setItem('blog', JSON.stringify(e))
+        // }
 
     }
 
@@ -150,7 +172,7 @@ const CreateBlog = ({ router }) => {
         console.log('Checked Categories')
         console.log(all)
         setCheckedCat(all)
-        formData.set('categories', all);
+        //formData.set('categories', all);
 
     }
 
@@ -171,7 +193,7 @@ const CreateBlog = ({ router }) => {
         console.log('Checked Tags')
         console.log(all)
         setCheckedTag(all)
-        formData.set('tags', all);
+        //formData.set('tags', all);
 
     }
 

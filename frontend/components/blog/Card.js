@@ -15,7 +15,7 @@ const Card = ({blog}) => {
 
     const showBlogTags = blog => (
         blog.tags.map((t, index) => (
-            <Link key={index} href={`/categories/${t.slug}`}>
+            <Link key={index} href={`/tags/${t.slug}`}>
                 <a className="btn btn-outline-primary mr-1 ml-1 mt-3">{t.name}</a>
             </Link>
         ))

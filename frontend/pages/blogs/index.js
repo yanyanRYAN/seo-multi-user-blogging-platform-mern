@@ -115,6 +115,7 @@ const Blogs = ({ blogs, categories, tags, totalBlogs, blogsLimit, blogsSkip, rou
     return (
         <React.Fragment>
             {head()}
+            {console.log(router)}
             <Layout>
                 <main>
                     <div className="container-fluid">

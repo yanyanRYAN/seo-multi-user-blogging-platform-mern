@@ -1,4 +1,5 @@
 const Tag = require('../models/tag');
+const Blog = require('../models/blog');
 const slugify = require('slugify');
 const {errorHandler} = require('../helpers/dbErrorHandler');
 
@@ -41,8 +42,23 @@ exports.read = (req, res) => {
                 error: errorHandler(err)
             });
         }
-        res.json(tag); 
+        //res.json(tag); 
         // later we will modify because we will query blogs based on this
+        //==== return related blogs with the tag
+        Blog.find({tags: tag})
+        .populate('categories', '_id name slug')
+        .populate('tags', '_id name slug')
+        .populate('postedBy', '_id name')
+        .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+        .sort({ createdAt: -1})
+        .exec((err, data) => {
+            if(err) {
+                return res.status(400).json({
+                    error: errorHandler(err)
+                });
+            }
+            res.json({tag: tag, blogs: data})
+        })
     })
 }
 
