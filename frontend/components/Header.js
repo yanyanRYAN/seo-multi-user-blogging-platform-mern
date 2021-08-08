@@ -18,6 +18,7 @@ import {
   NavbarText
 } from 'reactstrap';
 import Router from 'next/router';
+import Search from './blog/Search'
 
 //NProgress bar loading animations
 Router.onRouteChangeStart = url => NProgress.start();
@@ -31,9 +32,9 @@ const Header = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div>
+    <React.Fragment>
       <Navbar color="light" light expand="md">
-
+        
         <Link href="/"><NavLink className="font-weight-bold">{APP_NAME}</NavLink></Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -76,7 +77,8 @@ const Header = () => {
 
         </Collapse>
       </Navbar>
-    </div>
+      <Search />
+    </React.Fragment>
   );
 
 }

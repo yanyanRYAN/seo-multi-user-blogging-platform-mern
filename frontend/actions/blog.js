@@ -4,6 +4,8 @@ import fetch from 'isomorphic-fetch';
 //bring in API from our config
 import {API} from '../config';
 
+import queryString from 'query-string'
+
 //refer to backend/routes/category.js
 export const createBlog = (blog, token) => {
     //takes in blog and token of admin
@@ -129,6 +131,20 @@ export const updateBlog = (blog, token, slug) => {
     })
     .then(response => {
         return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
+// we will be passing params whilst using GET instead of post
+export const listSearch = (params) => {
+    console.log('search params', params)
+    let query = queryString.stringify(params) // ?limit=100&pagenation=10 
+    console.log('query params', query)  // {search= 'node'}
+    return fetch(`${API}/blogs/search?${query}`, {
+        method: 'GET'
+    })
+    .then(response => {
+        return response.json();
     })
     .catch(err => console.log(err))
 }

@@ -11,23 +11,51 @@ import Card from '../../components/blog/Card'
 import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config' //for head
 
 //server side rendered
-const Category = ({category, blogs}) => {
+const Category = ({category, blogs, router, query}) => {
+
+    const head = () => (
+        <Head>
+            <title>Weeb Blogs | {APP_NAME}</title>
+            <meta
+                name="description"
+                content="Random blogs from random weebs" />
+            <link rel="canonical" href={`${DOMAIN}${query.slug}`} />
+            <meta
+                property="og:title"
+                content={`Latest weeb blogs | ${APP_NAME}`}
+            />
+            <meta property="og:description" content="Random blogs from random weebs" />
+
+            <meta property="og:type" content="website" />
+
+            <meta property="og:url" content={`${DOMAIN}${router.asPath}`} />
+
+            <meta property="og:site_name" content={`${APP_NAME}`} />
+
+            <meta property="og:image" content={`${DOMAIN}/static/images/nakamagarage.jpg`} />
+            <meta property="og:image:secure_url" content={`${DOMAIN}/static/images/nakamagarage.jpg`} />
+            <meta property="og:image:type" content="image/jpg" />
+            <meta property="fb:app_id" content={`${FB_APP_ID}`} />
+
+        </Head>
+    )
 
     return(
         <React.Fragment>
             <Layout>
+                {head()}
                 <main>
                     <div className="container-fluid text-center">
                         <header>
                             <div className="col-md-12 pt-3">
                                 <h1 className="display-4 font-weight-bold">{category.name}</h1>
                                 {blogs.map((blog, index) => (
-                                    <div>                                       
-                                        <Card key={index} blog={blog} />
+                                    <div key={index}>                                       
+                                        <Card  blog={blog} />
                                         <hr />
                                     </div>
                                 ))}
-                                {JSON.stringify(blogs)}
+                                
                             </div>
                         </header>
                     </div>
@@ -42,9 +70,9 @@ Category.getInitialProps = ({query}) => {
         if(data.error) {
             console.log(data.error);
         } else {
-            return {category: data.category, blogs: data.blogs};
+            return {category: data.category, blogs: data.blogs, query};
         }
     });
 };
 
-export default Category;
+export default withRouter(Category);
