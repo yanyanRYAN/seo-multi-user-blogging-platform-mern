@@ -76,7 +76,7 @@ const UserProfile = ({user, blogs, query}) => {
                         <div className="col-md-6">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">Recent blogs by {user.name} </h5>
+                                    <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">Recent blogs by {user.name}</h5>
                                     {showUserBlogs()}
                                 </div>
                             </div>
@@ -84,7 +84,7 @@ const UserProfile = ({user, blogs, query}) => {
                         <div className="col-md-6">
                         <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">Contact {user.name} </h5>
+                                    <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">Contact {user.name}</h5>
                                     <br />
                                     <p>contact form</p> 
                                 </div>
@@ -102,7 +102,7 @@ UserProfile.getInitialProps = ({query}) => {
         if(data.error) {
             console.log(data.error)
         } else {
-            console.log(data)
+            //console.log(data)
             return {user: data.user, blogs: data.blogs, query}
         }
     })
