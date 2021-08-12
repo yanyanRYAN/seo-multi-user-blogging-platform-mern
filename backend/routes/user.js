@@ -4,7 +4,7 @@ const {  requireSignin, authMiddleware, adminMiddleware } = require('../controll
 const { read, publicProfile, update, photo } = require('../controllers/user');
 
 
-router.get('/profile', requireSignin, adminMiddleware, read); //private profile
+router.get('/user/profile', requireSignin, authMiddleware, read); //private profile
 //test
 // router.get('/secret', requireSignin, (req, res) => {
 //     res.json({

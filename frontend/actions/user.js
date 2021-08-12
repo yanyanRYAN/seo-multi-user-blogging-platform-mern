@@ -40,7 +40,7 @@ export const getProfile = (token) => {
     .catch(err => console.log(err))
 }
 
-export const update = (token) => {
+export const update = (token, user) => {
     //takes in blog and token of admin
 
     return fetch(`${API}/user/update`, {
