@@ -109,6 +109,7 @@ const BlogCreate = ({ router }) => {
             formData, //since formData is the same name formData: formData
             error: ''
         });
+        console.log("handle change photo" , photo)
     };
 
     const handleBody = e => {
@@ -137,7 +138,9 @@ const BlogCreate = ({ router }) => {
         //I ended up declaring new FormData in useEffect
 
         //
+        console.table(formData)
         console.log('update blog')
+        console.table(values);
         createBlog(formData, token).then(data => {
             if(data.error) {
                 setValues({...values, error: data.error})
@@ -152,7 +155,7 @@ const BlogCreate = ({ router }) => {
                     //location.reload();
                     //Router.replace(`${DOMAIN}/blogs/`).then(()=> Router.reload())
                     //Router.replace(`${DOMAIN}/blogs/`);
-                    Router.replace(`/admin/`).then(()=> Router.reload())
+                    //Router.replace(`/admin/`).then(()=> Router.reload())
                     
                 } else if(isAuth() && isAuth().role === 0){
                     //Router.replace(`${DOMAIN}/user/crud/${router.query.slug}`)

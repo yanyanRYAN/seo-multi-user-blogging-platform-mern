@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Blog = require('../models/blog');
 const _ = require('lodash');
 const formidable = require('formidable'); // handle formdata for photo upload
-const fs = require ('fs'); //get filesystem from nodejs
+const fs = require('fs'); //get filesystem from nodejs
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.read = (req, res) => {
@@ -51,9 +51,13 @@ exports.publicProfile = (req, res) => {
 };
 
 exports.update = (req, res) => {
+    console.log(req.profile);
     let form = new formidable.IncomingForm();
+    form.keepExtension = true;
     //form should be expecting an  fields, and or files aside from if there is err
     form.parse(req, (err, fields, files) => {
+        console.log("exports.update")
+        
         if(err) {
             return res.status(400).json({
                 error: 'Photo could not be uploaded'
@@ -65,10 +69,21 @@ exports.update = (req, res) => {
         // if there are any fields that have been updated then it will merge the changes with 
         // the existing field.  lodash is used so that it will keep the names consistant.
         user = _.extend(user, fields) 
-        
+        console.log("fields", fields)
+        console.log("fields.photo", files.photo);
+        console.log(user.photo)
 
-        if(fields.photo) {
-            if(files.photo.size > 3000000) { //3MB = 3000000bytes
+        if(fields.password && fields.password.length < 6) {
+            return res.status(400).json({
+                error: 'Password should be min 6 characters long'
+            })
+        }
+        
+        //im retarded i initally checked for fields.photo...
+        if(files.photo) {
+            console.log("has a photo")
+            console.log("has a photo", files.photo);
+            if(files.photo.size > 30000000) { //3MB = 3000000bytes
                 return res.status(400).json({
                     error: 'Image should be less than 3MB'
                 })
@@ -76,18 +91,18 @@ exports.update = (req, res) => {
             user.photo.data = fs.readFileSync(files.photo.path);
             user.photo.contentType = files.photo.type;
 
-            user.save((err, result) => {
-                if(err) {
-                    return res.status(400).json({
-                        error: errorHandler(err)
-                    })
-                }
-                //hide hashed password from return object
-                user.hashed_password = undefined
-
-                res.json(user);
-            })
         }
+        user.save((err, result) => {
+            if(err) {
+                return res.status(400).json({
+                    error: errorHandler(err)
+                })
+            }
+            //hide hashed password from return object
+            user.hashed_password = undefined
+
+            res.json(user);
+        })
     })
 }
 

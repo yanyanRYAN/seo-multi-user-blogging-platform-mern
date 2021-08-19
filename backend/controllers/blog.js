@@ -70,7 +70,7 @@ exports.create = (req, res) => {
         let arrayOfCategories = categories && categories.split(',')
         let arrayOfTags = tags && tags.split(',')
 
-
+        console.log("photo blog", files.photo);
         //handle files
         if (files.photo) {
             if (files.photo.size > 40000000) { //4MB was originally 1MB

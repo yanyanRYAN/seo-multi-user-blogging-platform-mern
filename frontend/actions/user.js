@@ -49,6 +49,8 @@ export const update = (token, user) => {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
         },
+        //send the body contents
+        body: user
 
     })
     .then(response => {
