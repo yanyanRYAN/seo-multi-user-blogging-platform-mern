@@ -100,7 +100,9 @@ exports.update = (req, res) => {
             }
             //hide hashed password from return object
             user.hashed_password = undefined
-
+            user.salt = undefined
+            user.photo = undefined //this fixes the QuotaExceededError in localstorage image is 
+            //pretty big and we dont want to send it back reguardless its expensive
             res.json(user);
         })
     })

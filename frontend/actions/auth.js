@@ -123,3 +123,17 @@ export const isAuth = () => {
         }
     }
 }
+
+
+export const updateUser = (user, next) => {
+    // accepts user, and next -- which is a callback that gives us a functionality to do something else after
+    //check if we are in client side
+    if(process.browser) {
+        if(localStorage.getItem('user')){
+            let auth = JSON.parse(localStorage.getItem('user'))
+            auth = user;  //set auth to the user that has been sent
+            localStorage.setItem('user', JSON.stringify(auth))
+            next()
+        }
+    }
+}
