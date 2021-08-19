@@ -106,6 +106,7 @@ const ProfileUpdate = () => {
                         success: true,
                         loading: false
                     })
+                    Router.reload();
                 })
                 // setValues({
                 //     ...values,
