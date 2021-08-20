@@ -34,12 +34,18 @@ const Header = () => {
   return (
     <React.Fragment>
       <Navbar color="light" light expand="md">
-        
+
         <Link href="/"><NavLink className="font-weight-bold">{APP_NAME}</NavLink></Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            
+            {
+              <React.Fragment>
+                <NavItem>
+                  <Link href="/user/crud/create"><NavLink className="btn btn-primary text-light" style={{ cursor: 'pointer' }}>Create Blog</NavLink></Link>
+                </NavItem>
+              </React.Fragment>
+            }
             {
               <React.Fragment>
                 <NavItem>
@@ -50,10 +56,10 @@ const Header = () => {
 
             {
               (isAuth() && isAuth().role == 1) ? <React.Fragment><NavItem>
-                  <Link href="/admin"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
-                </NavItem></React.Fragment> : (isAuth() && isAuth().role == 0) ? <React.Fragment><NavItem>
-                  <Link href="/user"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
-                </NavItem></React.Fragment> : null
+                <Link href="/admin"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
+              </NavItem></React.Fragment> : (isAuth() && isAuth().role == 0) ? <React.Fragment><NavItem>
+                <Link href="/user"><NavLink style={{ cursor: 'pointer' }}>{`${isAuth().name}'s`} Dashboard</NavLink></Link>
+              </NavItem></React.Fragment> : null
             }
 
             {
@@ -72,7 +78,7 @@ const Header = () => {
             {isAuth() && (<NavItem>
               <NavLink style={{ cursor: 'pointer' }} onClick={() => signout(() => Router.replace('/signin'))}>Signout</NavLink>
             </NavItem>)}
-            
+
           </Nav>
 
         </Collapse>

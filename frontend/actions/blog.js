@@ -5,12 +5,22 @@ import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 
 import queryString from 'query-string'
+import {isAuth} from './auth'; //gives us user role
 
 //refer to backend/routes/category.js
 export const createBlog = (blog, token) => {
-    //takes in blog and token of admin
+    //takes in blog and token of user
 
-    return fetch(`${API}/blog`, {
+    let createBlogEndpoint;
+    if(isAuth() && isAuth().role === 1) {
+        //Admin user
+        createBlogEndpoint = `${API}/blog`
+    } else if (isAuth() && isAuth().role === 0) {
+        //Regular user
+        createBlogEndpoint = `${API}/user/blog`
+    }
+
+    return fetch(`${createBlogEndpoint}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',

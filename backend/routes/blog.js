@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 //const { create } = require('../controllers/blog.js');
 
-const {  requireSignin, adminMiddleware } = require('../controllers/auth.js');
+const {  requireSignin, adminMiddleware, authMiddleware } = require('../controllers/auth.js');
 
 const {create, list, listAllBlogsCategoriesTags, read, remove, update, photo, listRelated, listSearch} = require('../controllers/blog')
 
@@ -19,5 +19,10 @@ router.get('/blog/photo/:slug', photo)
 router.post('/blogs/related', listRelated);
 
 router.get('/blogs/search', listSearch)
+
+// auth user blog crud
+router.post('/user/blog', requireSignin, authMiddleware, create);
+router.delete('/user/blog/:slug', requireSignin, authMiddleware, remove);
+router.put('/user/blog/:slug', requireSignin, authMiddleware, update);
 
 module.exports = router; //exports
