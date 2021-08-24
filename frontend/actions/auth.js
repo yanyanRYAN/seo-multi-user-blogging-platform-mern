@@ -6,6 +6,24 @@ import cookie from 'js-cookie';
 //bring in API from our config
 import {API} from '../config';
 
+import Router from 'next/router'
+
+export const handleResponse = response => {
+    // this is a helper method to handle the expiration of the user's token
+    if(response.status === 401) {
+        signout(() => {
+            Router.push({
+                pathname: '/signin',
+                query: {
+                    message: 'Your session is expired. Please signin.'
+                }
+            })
+        })   
+    } else {
+        return;
+    }
+}
+
 export const signup = (user) => {
     return fetch(`${API}/signup`, {
         method: 'POST',

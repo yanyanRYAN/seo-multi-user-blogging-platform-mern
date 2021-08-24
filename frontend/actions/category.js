@@ -4,6 +4,8 @@ import fetch from 'isomorphic-fetch';
 //bring in API from our config
 import {API} from '../config';
 
+import {handleResponse} from './auth';
+
 //refer to backend/routes/category.js
 export const create = (category, token) => {
     // console.log(`token ${token}`)
@@ -18,6 +20,7 @@ export const create = (category, token) => {
         body: JSON.stringify(category)
     })
     .then(response => {
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))
@@ -56,6 +59,7 @@ export const removeCategory = (slug, token) => {
         },
     })
     .then(response => {
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))

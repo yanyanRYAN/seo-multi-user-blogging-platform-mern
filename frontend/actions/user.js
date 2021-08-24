@@ -6,6 +6,8 @@ import {API} from '../config';
 
 import queryString from 'query-string'
 
+import {handleResponse} from './auth';
+
 //refer to backend/routes/category.js
 export const userPublicProfile = (username) => {
     //takes in blog and token of admin
@@ -54,6 +56,7 @@ export const update = (token, user) => {
 
     })
     .then(response => {
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))

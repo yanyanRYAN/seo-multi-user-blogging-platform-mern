@@ -5,7 +5,7 @@ import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 
 import queryString from 'query-string'
-import {isAuth} from './auth'; //gives us user role
+import {isAuth, handleResponse} from './auth'; //gives us user role
 
 //refer to backend/routes/category.js
 export const createBlog = (blog, token) => {
@@ -30,6 +30,8 @@ export const createBlog = (blog, token) => {
         body: blog
     })
     .then(response => {
+        //handle the response first before sending it back
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))
@@ -142,6 +144,7 @@ export const removeBlog = (slug, token) => {
         
     })
     .then(response => {
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))
@@ -169,6 +172,7 @@ export const updateBlog = (blog, token, slug) => {
         body: blog
     })
     .then(response => {
+        handleResponse(response)
         return response.json()
     })
     .catch(err => console.log(err))
