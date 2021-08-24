@@ -11,6 +11,10 @@ import SmallCard from '../../components/blog/SmallCard'
 
 import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config'
 
+
+//DISQUS THREAD IMPORT
+import DisqusThread from '../../components/DisqusThread'
+
 const SingleBlog = ({ blog, router, query }) => {
     //grab router query 
     //JSON.stringify(router)
@@ -84,6 +88,14 @@ const SingleBlog = ({ blog, router, query }) => {
         ))
     }
 
+    const showComments = () => {
+        return (
+            <div>
+                <DisqusThread id={blog.id} title={blog.title} path={`/blog/${blog.slug}`} />
+            </div>
+        )
+    }
+
     return <React.Fragment>
         {head()}
         <Layout>
@@ -125,9 +137,9 @@ const SingleBlog = ({ blog, router, query }) => {
                         </div>
                     </div>
                     
-                    <div className="container pb-5">
+                    <div className="container pt-5 pb-5">
                     <hr />
-                        <p>show comments</p>
+                        {showComments()}
                     </div>
                 </article>
             </main>
