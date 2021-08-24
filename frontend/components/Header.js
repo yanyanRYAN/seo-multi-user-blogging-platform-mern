@@ -42,7 +42,7 @@ const Header = () => {
             {
               <React.Fragment>
                 <NavItem>
-                  <Link href="/user/crud/create"><NavLink className="btn btn-primary text-light" style={{ cursor: 'pointer' }}>Create Blog</NavLink></Link>
+                  <Link href="/user/crud/blog"><NavLink className="btn btn-primary text-light" style={{ cursor: 'pointer' }}>Create Blog</NavLink></Link>
                 </NavItem>
               </React.Fragment>
             }

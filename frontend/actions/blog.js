@@ -98,8 +98,19 @@ export const listRelated = (blog) => {
     .catch(err => console.log(err))
 }
 
-export const list = () => {
-    return fetch(`${API}/blogs/`, {
+export const list = (username) => {
+    // username will only have a value if used by the regular user in user/crud/blogs.js component which passes a prop to BlogRead
+    // otherwise it will function normally 
+    let listBlogsEndpoint;
+    if(username) {
+        
+        listBlogsEndpoint = `${API}/${username}/blogs`;
+    } else {
+        listBlogsEndpoint = `${API}/blogs`;
+    }
+    
+
+    return fetch(`${listBlogsEndpoint}`, {
         method: 'GET'
     })
     .then(response => {
@@ -111,7 +122,16 @@ export const list = () => {
 export const removeBlog = (slug, token) => {
     //takes in blog and token of admin
 
-    return fetch(`${API}/blog/${slug}`, {
+    let deleteBlogEndpoint;
+    if(isAuth() && isAuth().role === 1) {
+        //Admin user
+        deleteBlogEndpoint = `${API}/blog/${slug}`
+    } else if (isAuth() && isAuth().role === 0) {
+        //Regular user
+        deleteBlogEndpoint = `${API}/user/blog/${slug}`
+    }
+
+    return fetch(`${deleteBlogEndpoint}`, {
         method: 'DELETE',
         headers: {
             Accept: 'application/json',
@@ -130,7 +150,16 @@ export const removeBlog = (slug, token) => {
 export const updateBlog = (blog, token, slug) => {
     //takes in blog and token of admin
 
-    return fetch(`${API}/blog/${slug}`, {
+    let updateBlogEndpoint;
+    if(isAuth() && isAuth().role === 1) {
+        //Admin user
+        updateBlogEndpoint = `${API}/blog/${slug}`
+    } else if (isAuth() && isAuth().role === 0) {
+        //Regular user
+        updateBlogEndpoint = `${API}/user/blog/${slug}`
+    }
+
+    return fetch(`${updateBlogEndpoint}`, {
         method: 'PUT',
         headers: {
             Accept: 'application/json',
