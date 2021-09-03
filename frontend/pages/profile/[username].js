@@ -7,6 +7,7 @@ import { userPublicProfile } from '../../actions/user'
 
 import moment from 'moment' //use for formatting the date
 
+import ContactForm from '../../components/form/ContactForm'
 
 import { API, DOMAIN, APP_NAME, FB_APP_ID } from '../../config'
 
@@ -99,7 +100,7 @@ const UserProfile = ({ user, blogs, query }) => {
                                 <div className="card-body">
                                     <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">Contact <span className="text-capitalize">{user.username}</span></h5>
                                     <br />
-                                    <p>contact form</p>
+                                    <ContactForm authorEmail={user.email} />
                                 </div>
                             </div>
                         </div>

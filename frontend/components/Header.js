@@ -53,6 +53,13 @@ const Header = () => {
                 </NavItem>
               </React.Fragment>
             }
+            {
+              <React.Fragment>
+                <NavItem>
+                  <Link href="/contact"><NavLink style={{ cursor: 'pointer' }}>Contact</NavLink></Link>
+                </NavItem>
+              </React.Fragment>
+            }
 
             {
               (isAuth() && isAuth().role == 1) ? <React.Fragment><NavItem>
