@@ -4,8 +4,14 @@ const shortId = require('shortid');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt'); //helps check if the token is expired and if its valid
 
+const _ = require('lodash');
+
 
 const { errorHandler } = require('../helpers/dbErrorHandler');
+
+const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
+const { response } = require('express');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 exports.signup = (req, res) => {
@@ -152,4 +158,96 @@ exports.canUpdateDeleteBlog = (req, res, next) => {
         }
         next()// <-- this makes it a middleware which means go to the next step in the route call
     })
+}
+
+exports.forgotPassword = (req, res) => {
+    //grab email
+    const {email} = req.body;
+    console.log(email);
+    //find user by email
+    User.findOne({email}, (err, user) => {
+        if(err || !user) {
+            return res.status(401).json({
+                error: 'User with that email does not exist'
+            })
+        }
+
+        //generate token
+        const token = jwt.sign({_id: user._id}, process.env.JWT_RESET_PASSWORD, {expiresIn: '10m'})
+
+        // send email with this token in the link
+        const emailData = {
+            from: process.env.EMAIL_FROM,
+            to: email,
+            subject: `Password Reset Link - ${process.env.APP_NAME}`,
+            html: `
+                <h4>Please use the following link to reset your password:</h4>
+                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+                <p>Link expires in 10 minutes.</p>
+                <hr />
+                <p>This email may contain sensitive information</p>
+                <p>https://nakamagarage.com</p>
+            `
+        };
+
+
+        // populating the db with user resetPasswordLink
+        return User.updateOne({resetPasswordLink: token}, (err, success) => {
+            if(err) {
+                return res.json({error: errorHandler(err)})
+            } else {
+                sgMail.send(emailData).then(sent => {
+                    return res.json({
+                        messsage: `Email has been sent to ${email}. Follow the instructions to reset your password. Link expires in 10 minutes.`
+                    })
+                }).catch((error) => {
+                    console.log(error.response.body)
+                })
+            }
+        })
+    })
+
+
+}
+
+exports.resetPassword = (req, res) => {
+    // grab reset password link and new password from client
+    const {resetPasswordLink, newPassword} = req.body
+
+    //find user based on reset password link
+    if(resetPasswordLink) {
+        //verify if token expired
+        jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function(err, decoded) {
+            if(err){
+                return res.status(401).json({
+                    error: 'Expired link.  Try again'
+                })
+            }
+
+            User.findOne({resetPasswordLink}, (err,user) => {
+                if(err || !user) {
+                    return res.status(401).json({
+                        error: 'Something went wrong. Try again later'
+                    })
+                }
+                const updatedFields = {
+                    password: newPassword,
+                    resetPasswordLink: ''
+                }
+
+                user = _.extend(user, updatedFields)
+
+                user.save((err,result) => {
+                    if(err){
+                        return response.status(400).json({
+                            error: errorHandler(err)
+                        })
+                    }
+                })
+                res.json({
+                    message: 'Great! Now you can login with your new password.'
+                })
+            } )
+        })
+    }
 }
