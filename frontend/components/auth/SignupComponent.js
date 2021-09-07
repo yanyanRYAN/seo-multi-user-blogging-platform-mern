@@ -2,7 +2,7 @@ import  Router  from 'next/router';
 import React, { useEffect } from 'react';
 import {useState} from 'react';
 import {isAuth, signup} from '../../actions/auth';
-
+import Link from 'next/link'
 
 const SignupComponent = () =>{
 
@@ -101,6 +101,10 @@ const SignupComponent = () =>{
             {showLoading()}
             {showMessage()}
             {showForm && signupForm()}
+            <br />
+            <Link href="/auth/password/forgot">
+                <a className="btn btn-outline-danger btn-sm">Forgot Password</a>
+            </Link>
             
         </React.Fragment>
         
