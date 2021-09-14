@@ -1,7 +1,7 @@
 import  Router  from 'next/router';
 import React, { useEffect } from 'react';
 import {useState} from 'react';
-import {isAuth, signup} from '../../actions/auth';
+import {isAuth, signup, preSignup} from '../../actions/auth';
 import Link from 'next/link'
 
 const SignupComponent = () =>{
@@ -32,7 +32,7 @@ const SignupComponent = () =>{
         setValues({...values, loading: true, error: false});
         const user =  {name, email, password} 
 
-        signup(user)
+        preSignup(user) //presignup user
         .then(data => {
             //first check for error response
             if(data.error){

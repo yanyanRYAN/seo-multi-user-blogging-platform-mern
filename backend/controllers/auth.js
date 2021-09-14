@@ -13,39 +13,112 @@ const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
 const { response } = require('express');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-
-exports.signup = (req, res) => {
-    
-    User.findOne({email: req.body.email}).exec((err, user)=>{
-        if(user) { //check if user already exists by email
+exports.preSignup = (req, res) => {
+    const {name, email, password} = req.body;
+    // find existing user
+    User.findOne({email: email.toLowerCase()}, (err, user) => {
+        if(user) {
             return res.status(400).json({
-                error: 'Email is already taken.'
+                error: `Email is taken`
             })
         }
+        // generate token using name email password
+        const token = jwt.sign({name, email, password}, process.env.JWT_ACCOUNT_ACTIVATION, {expiresIn: '10m'})
 
-        const {name, email, password} = req.body;
-        let username = shortId.generate(); //generate unique short id's
-        let profile = `${process.env.CLIENT_URL}/profile/${username}` //domain.name/profile/username
+        const emailData = {
+            from: process.env.EMAIL_FROM,
+            to: email,
+            subject: `Account activation link - ${process.env.APP_NAME}`,
+            html: `
+                <h4>Please use the following link to activate your account:</h4>
+                <p>${process.env.CLIENT_URL}/auth/account/activate/${token}</p>
+                <p>Link expires in 10 minutes.</p>
+                <hr />
+                <p>This email may contain sensitive information</p>
+                <p>https://nakamagarage.com</p>
+            `
+        };
 
-        let newUser = new User({name, email, password, profile, username});
-        newUser.save((err, success)=>{
-            if(err){
-                return res.status(400).json({
-                    error: err
+        sgMail.send(emailData).then(sent => {
+            return res.json({
+                message: `Email has been sent to ${email}.  Follow the instructions to activate your account.`
+            });
+        });
+    })
+}
+
+// old method before accountactivation feature
+// exports.signup = (req, res) => {
+    
+//     User.findOne({email: req.body.email}).exec((err, user)=>{
+//         if(user) { //check if user already exists by email
+//             return res.status(400).json({
+//                 error: 'Email is already taken.'
+//             })
+//         }
+
+//         const {name, email, password} = req.body;
+//         let username = shortId.generate(); //generate unique short id's
+//         let profile = `${process.env.CLIENT_URL}/profile/${username}` //domain.name/profile/username
+
+//         let newUser = new User({name, email, password, profile, username});
+//         newUser.save((err, success)=>{
+//             if(err){
+//                 return res.status(400).json({
+//                     error: err
+//                 })
+//             }
+            
+//             //for testing purposes only... user that is created
+//             // res.json({
+//             //     user: success
+//             // })
+
+//             //for later- this is what should return on successful signin
+//             res.json({
+//                 message: 'Signup success! Please signin.'
+//             })
+//         })
+//     })
+// };
+
+//Signup with account activation
+exports.signup = (req, res) => {
+
+    const token = req.body.token
+    if(token) {
+        jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function(err, decoded) {
+            if(err) {
+                return res.status(401).json({
+                    error: 'Expired link. Signup again'
                 })
             }
             
-            //for testing purposes only... user that is created
-            // res.json({
-            //     user: success
-            // })
+            const {name, email, password} = jwt.decode(token)
+            //console.log(name, email, password);
+            let username = shortId.generate(); //generate unique short id's
+            let profile = `${process.env.CLIENT_URL}/profile/${username}` //domain.name/profile/username
 
-            //for later- this is what should return on successful signin
-            res.json({
-                message: 'Signup success! Please signin.'
+            const user = new User({name, email, password, profile, username})
+            user.save((err,user) => {
+                if(err) {
+                    return res.status(401).json({
+                        error: errorHandler(err)
+                    })
+                }
+                
+                return res.json({
+                    message: 'Signup success! Please signin.'
+                })
             })
         })
-    })
+    } else {
+        return res.json({
+            message: 'Something went wrong. Try again'
+        })
+    }
+    
+   
 };
 
 exports.signin = (req, res) => {
