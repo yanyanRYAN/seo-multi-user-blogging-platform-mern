@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { signup, signin, signout, requireSignin, forgotPassword, resetPassword, preSignup } = require('../controllers/auth.js');
+const { signup, signin, signout, requireSignin, forgotPassword, resetPassword, preSignup, googleLogin } = require('../controllers/auth.js');
 
 // validators
 const {runValidation} = require('../validators'); //since it is named index.js you just need the dir
@@ -26,6 +26,9 @@ router.get('/secret', requireSignin, (req, res) => {
 //password forget/reset
 router.put('/forgot-password', forgotPasswordValidator, runValidation, forgotPassword)
 router.put('/reset-password', resetPasswordValidator, runValidation, resetPassword)
+
+//google login
+router.post('/google-login', googleLogin)
 
 
 module.exports = router; //exports
