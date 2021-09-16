@@ -28,6 +28,9 @@ Router.onRouteChangeError = url => NProgress.done();
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState(false);
+
+  const toggleSearch = () => setSearch(!search);
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -40,12 +43,11 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             {
-              <React.Fragment>
-                <NavItem>
-                  <Link href="/user/crud/blog"><NavLink className="btn btn-primary text-light" style={{ cursor: 'pointer' }}>Create Blog</NavLink></Link>
-                </NavItem>
-              </React.Fragment>
+              <NavItem style={{ cursor: 'pointer' }}>
+                <NavLink onClick={() => toggleSearch()}>Search</NavLink>
+              </NavItem>
             }
+            
             {
               <React.Fragment>
                 <NavItem>
@@ -84,13 +86,23 @@ const Header = () => {
             }
             {isAuth() && (<NavItem>
               <NavLink style={{ cursor: 'pointer' }} onClick={() => signout(() => Router.replace('/signin'))}>Signout</NavLink>
-            </NavItem>)}
+            </NavItem>)
+            }
+            {
+             isAuth() && (<React.Fragment>
+                <NavItem>
+                  <Link href="/user/crud/blog"><NavLink className="btn btn-primary text-light" style={{ cursor: 'pointer' }}>Create Blog</NavLink></Link>
+                </NavItem>
+              </React.Fragment>)
+            }
 
           </Nav>
 
         </Collapse>
       </Navbar>
-      <Search />
+      {
+        search && <Search />
+      }
     </React.Fragment>
   );
 

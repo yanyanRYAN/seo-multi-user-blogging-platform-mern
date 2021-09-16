@@ -11,3 +11,31 @@
     max-height: 600px;
     object-fit: cover;
 }
+
+/* .home-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+} */
+
+.home-jumbotron-image {
+    background-image: url("/static/images/5212902.jpg");
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #a19f9f;
+    background-blend-mode: multiply;
+}
+
+@media only screen and (min-width: 1440px) {
+    .home-jumbotron-image {
+        
+        background-position: center 35% ;
+        
+    }
+}
+
+hr.my-4 {
+    background-color: white;
+}
