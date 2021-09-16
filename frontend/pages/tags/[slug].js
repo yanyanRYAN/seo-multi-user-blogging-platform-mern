@@ -47,10 +47,10 @@ const Tag = ({tag, blogs, router, query}) => {
                 {console.log(router)}
                 
                 <main>
-                    <div className="container-fluid text-center">
+                    <div className="container-fluid">
                         <header>
                             <div className="col-md-12 pt-3">
-                                <h1 className="display-4 font-weight-bold">Blogs tagged with {tag.name}</h1>
+                                <h1 className="display-4 font-weight-bold text-center">Blogs tagged with {tag.name}</h1>
                                 {blogs.map((blog, index) => (
                                     <div key={index}>                                       
                                         <Card  blog={blog} />
