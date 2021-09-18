@@ -19,8 +19,9 @@
 } */
 
 .home-jumbotron-image {
-    background-image: url("/static/images/5212902.jpg");
+    background-image: url("/static/images/front-page/5212902.jpg");
     width: 100%;
+    height:400px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
