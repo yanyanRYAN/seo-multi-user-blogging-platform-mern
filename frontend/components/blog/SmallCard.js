@@ -29,7 +29,7 @@ const SmallCard = ({ blog }) => {
                             <h5 className="card-title">{blog.title}</h5>
                         </a>
                     </Link>
-                    <div className="card-text " style={{height: '300px'}} >
+                    <div className="card-text overflow-hidden" style={{height: '300px'}} >
                         {blog.excerpt == undefined ? ' ' : renderHTML(blog.excerpt)}
                     </div>
                     </div>
