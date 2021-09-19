@@ -83,7 +83,7 @@ exports.update = (req, res) => {
         if(files.photo) {
             console.log("has a photo")
             console.log("has a photo", files.photo);
-            if(files.photo.size > 30000000) { //3MB = 3000000bytes
+            if(files.photo.size > 3000000) { //3MB = 3000000bytes
                 return res.status(400).json({
                     error: 'Image should be less than 3MB'
                 })

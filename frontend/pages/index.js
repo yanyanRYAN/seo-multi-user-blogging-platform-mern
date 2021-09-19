@@ -1,15 +1,16 @@
 import Layout from '../components/Layout'
 import Link from 'next/link'
+import { NavLink } from 'reactstrap'
 import { APP_NAME } from '../config';
 import { urlObjectKeys } from 'next/dist/next-server/lib/utils';
 
 const styles = {
-    
-    "background-position" : "center",
-    "height" : "15vw",
-    "width" : "100%",
-    "object-fit" : "cover",
-    "opacity" : '50%'
+
+    backgroundPosition: "center",
+    height: "25vh",
+    width: "100%",
+    objectFit: "cover",
+    opacity: '50%'
 }
 
 const Index = () => {
@@ -37,7 +38,7 @@ const Index = () => {
                 </div>
 
 
-                <div className="container">
+                <div className="container mb-4">
                     <div className="row justify-content-between">
                         {/* <div className="col-md-8 offset-4" style={{backgroundColor:'grey', backgroundImage: "url(" + "/static/images/nakamagarage.jpg" + ")"}}>
                                 sup
@@ -45,30 +46,36 @@ const Index = () => {
                         <div className="col-md-5 mt-4">
                             <div className="card bg-dark text-white">
                                 <img className="card-img" style={styles} src="/static/images/front-page/rimukoro.png" alt="Card image" />
-                                <div className="card-img-overlay">
-                                    <h5 className="card-title">Signin</h5>
-                                    
+                                <div className="card-img-overlay align-items-center d-flex ">
+                                    <div className="card-body justify-content-center text-center">
+                                        <Link href="/signin"><button type="button" className="btn btn-lg btn-outline-light">Sign In</button></Link>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-5 mt-4">
                             <div className="card bg-dark text-white">
                                 <img className="card-img" style={styles} src="/static/images/front-page/dongho-kang.jpg" alt="Card image" />
-                                <div className="card-img-overlay">
-                                    <h5 className="card-title">Read Blogs</h5>
-                                    
+                                <div className="card-img-overlay align-items-center d-flex ">
+                                    <div className="card-body justify-content-center text-center">
+                                        <Link href="/blogs"><button type="button" className="btn btn-lg btn-outline-light">Read Blogs</button></Link>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
-                            
+
                     </div>
-                    <div className="row justify-content-center">
-                    <div className="col-md-6 mt-4">
-                            <div className="card bg-dark text-white">
+                    <div className="row justify-content-center mt-4">
+                        <div className="col-md-5 mt-4 ">
+                            <div className="card bg-dark text-white view zoom">
                                 <img className="card-img" style={styles} src="/static/images/front-page/fasces.jpg" alt="Card image" />
-                                <div className="card-img-overlay">
-                                    <h5 className="card-title">Write Blogs</h5>
-                                    
+                                <div className="card-img-overlay align-items-center d-flex ">
+                                    <div className="card-body justify-content-center text-center">
+                                    <Link href="/contact"><button type="button" className="btn btn-lg btn-outline-light">Contact</button></Link>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -79,7 +86,7 @@ const Index = () => {
 
             </article>
 
-            
+
 
         </Layout>
     )

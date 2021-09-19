@@ -38,7 +38,7 @@ const Header = () => {
     <React.Fragment>
       <Navbar color="light" light expand="md">
 
-        <Link href="/"><NavLink className="font-weight-bold">{APP_NAME}</NavLink></Link>
+        <Link href="/"><NavLink style={{ cursor: 'pointer' }} className="font-weight-bold">{APP_NAME}</NavLink></Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
