@@ -18,7 +18,7 @@ const formRoutes = require('./routes/form');
 const app = express()
 
 //db
-mongoose.connect(process.env.DATABASE_CLOUD, {useNewUrlParser: true,useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true})
+mongoose.connect(process.env.DATABASE_LOCAL, {useNewUrlParser: true,useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true})
 .then(()=> console.log('DB connected'));
 
 // middlewares
