@@ -9,11 +9,13 @@ const _ = require('lodash');
 
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
-const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
+// const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
 const { response } = require('express');
 const {OAuth2Client} = require('google-auth-library');
 const shortid = require('shortid');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const { sendEmailWithNodemailer } = require("../helpers/email");
 
 exports.preSignup = (req, res) => {
     const {name, email, password} = req.body;
@@ -41,11 +43,17 @@ exports.preSignup = (req, res) => {
             `
         };
 
-        sgMail.send(emailData).then(sent => {
+        // sgMail.send(emailData).then(sent => {
+        //     return res.json({
+        //         message: `Email has been sent to ${email}.  Follow the instructions to activate your account.`
+        //     });
+        // });
+
+        sendEmailWithNodemailer(req, res, emailData).then(sent => {
             return res.json({
-                message: `Email has been sent to ${email}.  Follow the instructions to activate your account.`
+                message: `Email has been sent to ${email}. Follow the instructions to activate your account.`
             });
-        });
+        })
     })
 }
 
@@ -271,13 +279,20 @@ exports.forgotPassword = (req, res) => {
             if(err) {
                 return res.json({error: errorHandler(err)})
             } else {
-                sgMail.send(emailData).then(sent => {
-                    return res.json({
-                        message: `Email has been sent to ${email}. Follow the instructions to reset your password. Link expires in 10 minutes.`
+                // sgMail.send(emailData).then(sent => {
+                //     return res.json({
+                //         message: `Email has been sent to ${email}. Follow the instructions to reset your password. Link expires in 10 minutes.`
+                //     })
+                // }).catch((error) => {
+                //     console.log(error.response.body)
+                // })
+                sendEmailWithNodemailer(req, res, emailData).then(sent => {
+                        return res.json({
+                            message: `Email has been sent to ${email}. Follow the instructions to reset your password. Link expires in 10 minutes.`
+                        })
+                    }).catch((error) => {
+                        console.log(error.response.body)
                     })
-                }).catch((error) => {
-                    console.log(error.response.body)
-                })
             }
         })
     })

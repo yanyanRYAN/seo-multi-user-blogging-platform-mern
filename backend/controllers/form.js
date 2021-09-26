@@ -1,9 +1,11 @@
-const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// const sgMail = require('@sendgrid/mail'); //SENDGRID_API_KEY
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const { sendEmailWithNodemailer } = require("../helpers/email");
 
 exports.contactForm = (req, res) => {
     const {email, name, message} = req.body;
-    //console.log(req.body);
+    console.log(req.body);
 
     const emailData = {
         to: process.env.EMAIL_TO,
@@ -24,13 +26,22 @@ exports.contactForm = (req, res) => {
 
     //console.log(emailData);
 
-    sgMail.send(emailData).then(sent => {
-        return res.json(
-            {success: true}
-        )
-    }).catch((error) => {
-        console.log(error.response.body)
-    })
+    // sgMail.send(emailData).then(sent => {
+    //     return res.json(
+    //         {success: true}
+    //     )
+    // }).catch((error) => {
+    //     console.log(error.response.body)
+    // })
+
+    sendEmailWithNodemailer(req, res, emailData).then(sent => {
+            return res.json(
+                {success: true}
+            )
+        }).catch((error) => {
+            console.log(error.response.body)
+        })
+
 };
 
 exports.contactBlogAuthorForm = (req, res) => {
@@ -58,7 +69,14 @@ exports.contactBlogAuthorForm = (req, res) => {
 
     //console.log(emailData);
 
-    sgMail.send(emailData).then(sent => {
+    // sgMail.send(emailData).then(sent => {
+    //     return res.json(
+    //         {success: true}
+    //     )
+    // }).catch((error) => {
+    //     console.log(error.response.body)
+    // })
+    sendEmailWithNodemailer(req, res, emailData).then(sent => {
         return res.json(
             {success: true}
         )
